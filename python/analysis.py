@@ -25,12 +25,17 @@ import time
 
 import cartopy.crs as ccrs
 
+consumer_key=""
+consumer_secret=""
+consumer_token=""
+token_secret=""
+
 # File with OAuth keys
 # Corresponding format is the following
-# auth = requests_oauthlib.OAuth1(key1, key2, key3, key4)
-# url = 'https://stream.twitter.com/1.1/statuses/filter.json'
+hard_auth = requests_oauthlib.OAuth1(consumer_key, consumer_secret, consumer_token, token_secret)
+hard_url = 'https://stream.twitter.com/1.1/statuses/filter.json'
 
-import config
+#import config
 
 
 BATCH_INTERVAL = 60  # How frequently to update (seconds)
@@ -114,8 +119,8 @@ def stream_twitter_data():
         This is the returned response from the GET request on the twitter endpoint
     """
     data      = [('language', 'en'), ('locations', '-130,20,-60,50')]
-    query_url = config.url + '?' + '&'.join([str(t[0]) + '=' + str(t[1]) for t in data])
-    response  = requests.get(query_url, auth=config.auth, stream=True)
+    query_url = hard_url + '?' + '&'.join([str(t[0]) + '=' + str(t[1]) for t in data])
+    response  = requests.get(query_url, auth=hard_auth, stream=True)
     print(query_url, response) # 200 <OK>
     count = 0
     for line in response.iter_lines():  # Iterate over streaming tweets
